@@ -6,4 +6,7 @@ export interface UserInfo {
   total_private_repos: number;
   public_repos: number;
   created_at: string;
+  plan: {
+    name: string;
+  };
 }
