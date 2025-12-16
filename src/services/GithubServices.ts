@@ -1,5 +1,6 @@
 import axios from "axios";
 import { RepositoryItem } from "../interfaces/RepositoryItem";
+import { UserInfo } from "../interfaces/UserInfo";
 
 const GITHUB_API_URL = "https://api.github.com";
 const GITHUB_API_TOKEN = `Bearer ${import.meta.env.VITE_GITHUB_API_TOKEN}`;
@@ -48,12 +49,28 @@ export const createRepository = async (
   try {
     const response = await axios.post(`${GITHUB_API_URL}/user/repos`, repo, {
       headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_GITHUB_API_TOKEN}`,
+        Authorization: GITHUB_API_TOKEN,
       },
     });
 
     console.log("Creado Exitosamente:", response.data);
   } catch (error) {
     console.error("Error Ocurrido:", error);
+  }
+};
+
+export const getUserInfo = async (): Promise<UserInfo | null> => {
+  try {
+    const response = await axios.get(`${GITHUB_API_URL}/user`, {
+      headers: {
+        Authorization: GITHUB_API_TOKEN,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error recuperando usuario:", error);
+    alert("Error recuperando usuario");
+    return null;
   }
 };

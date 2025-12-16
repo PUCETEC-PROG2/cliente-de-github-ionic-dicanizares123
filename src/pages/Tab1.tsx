@@ -5,8 +5,6 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonItem,
-  IonLabel,
   useIonViewDidEnter,
 } from "@ionic/react";
 import "./Tab1.css";

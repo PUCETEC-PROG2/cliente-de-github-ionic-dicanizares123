@@ -4,6 +4,7 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonViewDidEnter,
 } from "@ionic/react";
 import {
   IonCard,
@@ -15,12 +16,37 @@ import {
 
 import "./Tab3.css";
 
+import { useState } from "react";
+import { UserInfo } from "../interfaces/UserInfo";
+import { getUserInfo } from "../services/GithubServices";
+
 const Tab3: React.FC = () => {
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    name: "Usuario no encontrado",
+    login: "no-username",
+    bio: "No se encontro bio",
+    avatar_url: "https://via.placeholder.com/150",
+    total_private_repos: 0,
+    public_repos: 0,
+    created_at: "N/A",
+  });
+
+  const loadUserInfo = async () => {
+    const response = await getUserInfo();
+    if (response) {
+      setUserInfo(response);
+    }
+  };
+
+  useIonViewDidEnter(() => {
+    loadUserInfo();
+  });
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Usuario</IonTitle>
+          <IonTitle>{userInfo.login}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -31,18 +57,21 @@ const Tab3: React.FC = () => {
         </IonHeader>
         <div className="card-container">
           <IonCard>
-            <img
-              alt="Silhouette of mountains"
-              src="https://ionicframework.com/docs/img/demos/card-media.png"
-            />
+            <img alt="Silhouette of mountains" src={userInfo.avatar_url} />
             <IonCardHeader>
-              <IonCardTitle>David Cañizares</IonCardTitle>
-              <IonCardSubtitle>dicanizares123</IonCardSubtitle>
+              <IonCardTitle>{userInfo.name}</IonCardTitle>
+              <IonCardSubtitle>{userInfo.login}</IonCardSubtitle>
             </IonCardHeader>
 
+            <IonCardContent>{userInfo.bio}</IonCardContent>
             <IonCardContent>
-              Here's a small text description for the card content. Nothing
-              more, nothing less.
+              Repositorios privados: {userInfo.total_private_repos}
+            </IonCardContent>
+            <IonCardContent>
+              Repositorios públicos: {userInfo.public_repos}
+            </IonCardContent>
+            <IonCardContent>
+              Usuario desde {new Date(userInfo.created_at).toLocaleDateString()}
             </IonCardContent>
           </IonCard>
         </div>
